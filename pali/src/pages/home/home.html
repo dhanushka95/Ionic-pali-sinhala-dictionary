@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      පාලි
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-header>
+  <ion-toolbar>
+    <ion-searchbar [(ngModel)]="searchValue" (ionInput)="offlineSearch($event)"></ion-searchbar>
+    <ion-buttons end>
+      <button ion-button icon-only (click)='search()'>
+        <ion-icon style="zoom:0.8;color: #000000;" name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
+      <button ion-button icon-only (click)='speechRecognitionExecute()'>
+        <ion-icon style="zoom:0.8;color: #000000;" name="mic"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
+      <button ion-button icon-only (click)='typeChange($event)'>
+        <ion-icon style="zoom:0.8;color: #000000;" name="settings"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <ion-list>
+      <ion-spinner style="align-items: center" name="bubbles" *ngIf="isLoading"></ion-spinner>
+    <ion-item *ngFor="let item of Item">
+      <ion-grid (click)="moreInfo(item)">
+        <ion-row>
+      <p style="font-weight: bold; font-size: 8px; color: #b2b2b2;">{{item.field1}}</p>
+        </ion-row>
+        <ion-row>
+      <p style="font-weight: bold; font-size: 15px; color: #000000;">{{item.field2}}</p>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-list>
+</ion-content>
