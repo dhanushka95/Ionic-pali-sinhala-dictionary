@@ -7,7 +7,7 @@
 </ion-header>
 <ion-header>
   <ion-toolbar>
-    <ion-searchbar [(ngModel)]="searchValue" (ionInput)="offlineSearch($event)"></ion-searchbar>
+    <ion-searchbar placeholder="සොයන්න" [(ngModel)]="searchValue" (ionInput)="offlineSearch($event)"></ion-searchbar>
     <ion-buttons end>
       <button ion-button icon-only (click)='search()'>
         <ion-icon style="zoom:0.8;color: #000000;" name="search"></ion-icon>

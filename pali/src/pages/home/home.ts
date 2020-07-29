@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController,AlertController,PopoverController } from 'ionic-angular';
+import { NavController,AlertController,PopoverController,ToastController } from 'ionic-angular';
 import {InformationServiceProvider} from "../../providers/information-service/information-service";
 import { SpeechRecognition } from '@ionic-native/speech-recognition';
 import {Settings} from "../../common/Settings";
@@ -15,21 +15,29 @@ export class HomePage {
   isLoading = false;
   type = 1;
   tempItem:any[] = [];
-  constructor(public navCtrl: NavController,public informationServiceProvider:InformationServiceProvider,public speechRecognition: SpeechRecognition,public alertController: AlertController,public popoverController: PopoverController
+  constructor(public navCtrl: NavController,public informationServiceProvider:InformationServiceProvider,public speechRecognition: SpeechRecognition,public alertController: AlertController,public popoverController: PopoverController,public toastController: ToastController
      ) {
   }
-  search(){
+  async search() {
     try {
-      this.isLoading = true;
-      this.informationServiceProvider.getInfo(this.searchValue,this.type).subscribe(
-        (list: any) => {
-          console.log(list);
-           this.Item = list.data;
-          this.tempItem = list.data;
-          this.isLoading = false;
+      if (this.searchValue != '') {
+        this.isLoading = true;
+        this.informationServiceProvider.getInfo(this.searchValue, this.type).subscribe(
+          (list: any) => {
+            console.log(list);
+            this.Item = list.data;
+            this.tempItem = list.data;
+            this.isLoading = false;
+          });
+      } else {
+        const toast = await this.toastController.create({
+          message: 'සෙවුම් පදය ඇතුලත් කරන්න.',
+          duration: 2000
         });
-    }catch (e) {
-      console.log(e+"");
+        await toast.present();
+      }
+    } catch (e) {
+      console.log(e + "");
     }
   }
   onCancel(){
@@ -83,7 +91,7 @@ export class HomePage {
       `,
       cssClass:'alert-danger',
       buttons: [ {
-        text: 'Back',
+        text:'ආපසු',
         role: 'cancel',
         cssClass: 'secondary',
         handler: (blah) => {
@@ -96,12 +104,17 @@ export class HomePage {
   async typeChange(ev:any){
     let alert = this.alertController.create();
     alert.setCssClass('alert-success')
-    alert.setTitle('Convert To');
-    alert.addInput({type: 'radio', label: 'සිංහල --> පාලී', value: '1', checked: true});
-    alert.addInput({type: 'radio', label: 'පාලී --> සිංහල', value: '2'});
+    alert.setTitle('පරිවර්තනය කරන්න');
+    if(Settings.type ===1) {
+      alert.addInput({type: 'radio', label: 'සිංහල --> පාලී', value: '1', checked: true});
+      alert.addInput({type: 'radio', label: 'පාලී --> සිංහල', value: '2'});
+    }else {
+      alert.addInput({type: 'radio', label: 'සිංහල --> පාලී', value: '1'});
+      alert.addInput({type: 'radio', label: 'පාලී --> සිංහල', value: '2', checked: true});
+    }
     await alert.present();
     alert.addButton({
-      text: 'OK',
+      text: 'හරි',
       handler: data => {
         console.log(data);
         this.type = parseInt(data)
